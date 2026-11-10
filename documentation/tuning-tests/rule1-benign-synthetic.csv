@@ -1,0 +1,2 @@
+EventID,SourceImage,TargetImage,GrantedAccess,TestType,Description
+10,C:\Program Files\Contoso\Diagnostics\powershell.exe,C:\Windows\System32\lsass.exe,0x1010,Synthetic benign scenario,Approved diagnostic activity (simulated)

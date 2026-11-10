@@ -1,9 +1,9 @@
-﻿title: Renamed Regsvr32 Executing Remote Scriptlet
+title: Renamed Regsvr32 Executing Remote Scriptlet
 id: 4b8e2d71-9c35-4f60-a128-7d6e3b5c9042
 status: experimental
-description: Detects a renamed executable masquerading as the Windows Register Server and using remote scriptlet execution arguments.
+description: Detects a renamed executable masquerading as the Windows Register Server and using remote scriptlet execution arguments, excluding an approved deployment agent.
 author: Cyberion Detection Engineering
-date: 2026-11-04
+date: 2026-11-10
 references:
     - https://attack.mitre.org/techniques/T1218/010/
 tags:
@@ -20,7 +20,9 @@ detection:
             - '/i:'
             - 'http'
             - '.dll'
-    condition: selection
+    filter_approved_deployment:
+        ParentImage|startswith: 'C:\Program Files\Contoso\DeploymentAgent\'
+    condition: selection and not filter_approved_deployment
 falsepositives:
-    - Legitimate registration of DLL scriptlets from remote administrative sources
+    - Approved internal software deployment utilities registering remote DLL scriptlets
 level: high

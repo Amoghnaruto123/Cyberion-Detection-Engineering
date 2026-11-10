@@ -1,0 +1,2 @@
+EventID,Image,ParentImage,Description,CommandLine,TestType
+1,C:\ProgramData\Contoso\Deployment\reghelper.exe,C:\Program Files\Contoso\DeploymentAgent\deploy.exe,Microsoft(C) Register Server,"reghelper.exe /i:http://deployment.contoso.example/components/approved.dll",Synthetic benign scenario

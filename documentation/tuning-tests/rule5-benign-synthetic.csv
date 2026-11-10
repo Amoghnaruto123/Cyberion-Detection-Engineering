@@ -1,0 +1,2 @@
+EventID,Image,ParentImage,CommandLine,TestType,Description
+1,C:\Windows\System32\rundll32.exe,C:\Program Files\Contoso\DocumentViewer\viewer.exe,"rundll32.exe url.dll,FileProtocolHandler file://C:\ProgramData\Contoso\manual.html",Synthetic benign scenario,Approved document viewer opening a local manual (simulated)
