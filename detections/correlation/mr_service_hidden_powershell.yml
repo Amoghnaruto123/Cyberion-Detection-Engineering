@@ -1,0 +1,71 @@
+﻿title: Suspicious Service ImagePath Modification with Hidden PowerShell
+id: 7d2f1a91-8c43-4e65-9a21-2b6c8f0d1101
+name: service_hidden_powershell_registry
+status: experimental
+description: Detects services.exe modifying a service ImagePath registry value to launch PowerShell with hidden execution arguments.
+logsource:
+    product: windows
+    category: registry_event
+detection:
+    selection:
+        EventID: 13
+        Image|endswith: '\services.exe'
+        TargetObject|contains: '\services\'
+        Details|contains|all:
+            - 'powershell.exe'
+            - 'hidden'
+            - '-nop'
+    condition: selection
+falsepositives:
+    - Legitimate service configuration changes involving PowerShell
+level: high
+
+---
+title: Service Launched Command Shell with Hidden PowerShell
+id: 8e3a2b02-9d54-4f76-ae32-3c7d9e1f2202
+name: service_launched_hidden_powershell
+status: experimental
+description: Detects cmd.exe launched by services.exe with command-line arguments that start hidden PowerShell.
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        EventID: 1
+        Image|endswith: '\cmd.exe'
+        ParentImage|endswith: '\services.exe'
+        CommandLine|contains|all:
+            - 'powershell.exe'
+            - '-nop'
+            - 'hidden'
+    condition: selection
+falsepositives:
+    - Legitimate service operations that launch hidden PowerShell through cmd.exe
+level: high
+
+---
+title: Service Modification Followed by Hidden PowerShell Execution
+id: 9f4b3c13-ae65-4078-bf43-4d8e0f2a3303
+status: experimental
+description: Detects a service ImagePath registry modification followed by cmd.exe launching hidden PowerShell, correlated through the same service process GUID.
+references:
+    - https://attack.mitre.org/techniques/T1569/002/
+tags:
+    - attack.t1569.002
+    - attack.execution
+level: critical
+falsepositives:
+    - Legitimate service configuration changes that launch hidden PowerShell
+correlation:
+    type: temporal
+    rules:
+        - service_hidden_powershell_registry
+        - service_launched_hidden_powershell
+    aliases:
+        service_process_guid:
+            service_hidden_powershell_registry: ProcessGuid
+            service_launched_hidden_powershell: ParentProcessGuid
+    group-by:
+        - service_process_guid
+    timespan: 30s
+

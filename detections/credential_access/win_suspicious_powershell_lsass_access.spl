@@ -1,0 +1,1 @@
+﻿EventCode=10 SourceImage="*\\powershell.exe" TargetImage="*\\lsass.exe" GrantedAccess="0x1010"

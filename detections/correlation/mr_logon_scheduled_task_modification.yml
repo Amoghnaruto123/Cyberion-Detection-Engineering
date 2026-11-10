@@ -1,0 +1,57 @@
+﻿title: Successful Network Logon
+name: successful_network_logon
+id: 7c1e8a21-9f43-4b62-a101-000000000031
+status: experimental
+description: Detects successful Windows network logons for correlation with subsequent activity.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: '3'
+        TargetLogonId|exists: true
+    condition: selection
+level: informational
+---
+title: Scheduled Task Modification
+name: scheduled_task_modified
+id: 7c1e8a21-9f43-4b62-a101-000000000032
+status: experimental
+description: Detects modification of a Windows scheduled task.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4702
+        SubjectLogonId|exists: true
+        TaskName|exists: true
+    condition: selection
+level: medium
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005
+---
+title: Network Logon Followed by Scheduled Task Modification
+id: 7c1e8a21-9f43-4b62-a101-000000000033
+status: experimental
+description: Correlates a successful network logon with a scheduled task modification performed under the same logon session.
+correlation:
+    type: temporal
+    rules:
+        - successful_network_logon
+        - scheduled_task_modified
+    group-by: logon_id
+    timespan: 1m
+    aliases:
+        successful_network_logon:
+            logon_id: TargetLogonId
+        scheduled_task_modified:
+            logon_id: SubjectLogonId
+level: high
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005

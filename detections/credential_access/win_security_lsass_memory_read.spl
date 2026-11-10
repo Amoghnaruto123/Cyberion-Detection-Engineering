@@ -1,0 +1,1 @@
+﻿source="WinEventLog:Security" EventCode=4663 ObjectType="Process" ObjectName="*\\lsass.exe" AccessMask="0x10"

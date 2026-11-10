@@ -1,0 +1,1 @@
+﻿EventCode=13 Image="*\\services.exe" TargetObject="*\\services\\*" TargetObject="*\\ImagePath" Details="*powershell*" Details="*hidden*" Details="*-nop*"

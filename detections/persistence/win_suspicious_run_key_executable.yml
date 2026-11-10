@@ -1,0 +1,23 @@
+﻿title: Suspicious Executable Written to Windows Run Registry Key
+id: 2f8c6a31-7d94-4e52-b106-9c3a5f8d7210
+status: experimental
+description: Detects an executable being configured in the Windows machine-wide Run registry key for persistence.
+author: Cyberion Detection Engineering
+date: 2026-11-04
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+tags:
+    - attack.t1547
+    - attack.t1547.001
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventID: 13
+        TargetObject|contains: '\Microsoft\Windows\CurrentVersion\Run'
+        Details|endswith: '.exe"'
+    condition: selection
+falsepositives:
+    - Legitimate software installers configuring applications to run at startup
+level: high

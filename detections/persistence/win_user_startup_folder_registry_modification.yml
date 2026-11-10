@@ -1,0 +1,22 @@
+﻿title: Suspicious Modification of User Startup Folder Registry Path
+id: 7a3c9e21-5d84-4f60-b127-8e6d2a5c9031
+status: experimental
+description: Detects modification of the Windows User Shell Folders Startup registry value to redirect the user's Startup folder.
+author: Cyberion Detection Engineering
+date: 2026-11-04
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+tags:
+    - attack.t1547
+    - attack.t1547.001
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventID: 13
+        TargetObject|contains: '\User Shell Folders\startup'
+    condition: selection
+falsepositives:
+    - Legitimate profile customization or enterprise configuration changes
+level: high

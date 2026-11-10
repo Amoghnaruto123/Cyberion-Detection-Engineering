@@ -1,0 +1,64 @@
+﻿title: MSHTA Execution from Temporary Internet Files
+id: a1c5d4e6-7b89-4c12-9d34-5e6f70819201
+name: mshta_execution_from_internet_cache
+status: experimental
+description: Detects mshta.exe executing an HTA file from the Temporary Internet Files directory.
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        EventID: 1
+        Image|endswith: '\mshta.exe'
+        CommandLine|contains|all:
+            - 'Temporary Internet Files'
+            - '.hta'
+    condition: selection
+falsepositives:
+    - Legitimate HTA files executed from the Internet cache
+level: high
+
+---
+title: MSHTA Suspicious Outbound Network Connection
+id: b2d6e5f7-8c90-4d23-ae45-6f7081920302
+name: mshta_outbound_network_connection
+status: experimental
+description: Detects outbound network connections initiated by mshta.exe.
+logsource:
+    product: windows
+    category: network_connection
+detection:
+    selection:
+        EventID: 3
+        Image|endswith: '\mshta.exe'
+        DestinationPort: 4443
+    condition: selection
+falsepositives:
+    - Legitimate MSHTA network communication
+level: critical
+
+---
+title: MSHTA Cached HTA Execution and Network Connection
+id: c3e7f608-9d01-4e34-bf56-708192a30403
+status: experimental
+description: Detects MSHTA executing an HTA file from the Internet cache and an outbound network connection from the same process.
+tags:
+    - attack.t1218.005
+    - attack.defense_evasion
+level: critical
+falsepositives:
+    - Legitimate MSHTA applications that execute cached HTA files and establish network connections
+correlation:
+    type: temporal
+    rules:
+        - mshta_execution_from_internet_cache
+        - mshta_outbound_network_connection
+    aliases:
+        mshta_process_guid:
+            mshta_execution_from_internet_cache: ProcessGuid
+            mshta_outbound_network_connection: ProcessGuid
+    group-by:
+        - mshta_process_guid
+    timespan: 30s
+
+

@@ -1,0 +1,1 @@
+﻿EventCode=13 TargetObject="*\\Microsoft\\Windows\\CurrentVersion\\Run*" Details="*.exe\""

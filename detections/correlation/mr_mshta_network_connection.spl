@@ -1,0 +1,8 @@
+﻿| multisearch
+[ search EventID=1 Image="*\\mshta.exe" CommandLine="*Temporary Internet Files*" CommandLine="*.hta*" | eval event_type="mshta_execution_from_internet_cache" | rename ProcessGuid as mshta_process_guid ]
+[ search EventID=3 Image="*\\mshta.exe" DestinationPort=4443 | eval event_type="mshta_outbound_network_connection" | rename ProcessGuid as mshta_process_guid ]
+
+| bin _time span=30s
+| stats dc(event_type) as event_type_count by _time mshta_process_guid
+
+| search event_type_count >= 2

@@ -1,0 +1,24 @@
+﻿title: Suspicious Process Reading LSASS Memory
+id: 8b7c2d41-6e93-4a15-bf20-9c5d7e3a1f62
+status: experimental
+description: Detects processes reading memory from the LSASS process using Windows Security Event ID 4663.
+author: Cyberion Detection Engineering
+date: 2026-11-03
+references:
+    - https://attack.mitre.org/techniques/T1003/
+tags:
+    - attack.credential-access
+    - attack.t1003
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4663
+        ObjectType: Process
+        ObjectName|endswith: '\lsass.exe'
+        AccessMask: '0x10'
+    condition: selection
+falsepositives:
+    - Legitimate security monitoring tools accessing LSASS memory
+level: high

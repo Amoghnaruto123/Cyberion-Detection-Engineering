@@ -1,0 +1,24 @@
+﻿title: Suspicious Hidden Local Account Creation via SAM Registry
+id: 3c7a9e21-6d84-4f50-b128-9a5e2d7c6041
+status: experimental
+description: Detects creation of a local account through modification of the Windows SAM account names registry path.
+author: Cyberion Detection Engineering
+date: 2026-11-04
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+tags:
+    - attack.t1136
+    - attack.t1136.001
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventID: 13
+        TargetObject|contains: '\SAM\SAM\Domains\Account\Users\Names\'
+        TargetObject|endswith: '$\(Default)'
+    condition: selection
+falsepositives:
+    - Legitimate local account provisioning
+    - Authorized service account creation
+level: high

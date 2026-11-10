@@ -1,0 +1,1 @@
+﻿EventCode=1 Image="*\\rundll32.exe" CommandLine="*url.dll,FileProtocolHandler*" CommandLine="*file://*"

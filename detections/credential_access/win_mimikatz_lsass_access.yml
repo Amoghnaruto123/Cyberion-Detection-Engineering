@@ -1,0 +1,25 @@
+﻿title: Mimikatz Accessing LSASS Process
+id: 6d2e8a41-5c73-4f90-a128-9b6e3d7c2f51
+status: experimental
+description: Detects Mimikatz accessing the LSASS process using Sysmon Event ID 10.
+author: Cyberion Detection Engineering
+date: 2026-11-03
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+tags:
+    - attack.credential-access
+    - attack.t1003
+    - attack.t1003.001
+logsource:
+    product: windows
+    category: process_access
+detection:
+    selection:
+        EventID: 10
+        SourceImage|endswith: '\mimikatz.exe'
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess: '0x1010'
+    condition: selection
+falsepositives:
+    - Authorized security testing using Mimikatz
+level: critical

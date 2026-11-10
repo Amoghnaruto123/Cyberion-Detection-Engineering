@@ -1,0 +1,13 @@
+﻿| multisearch
+    [ search EventID=4624 LogonType="3" TargetLogonId=*
+      | eval logon_id=TargetLogonId, event_type="successful_network_logon" ]
+    [ search EventID=4702 SubjectLogonId=* TaskName=*
+      | eval logon_id=SubjectLogonId, event_type="scheduled_task_modified" ]
+
+| stats dc(event_type) as event_type_count
+        values(event_type) as event_types
+        values(TaskName) as modified_tasks
+        values(IpAddress) as source_ips
+        by logon_id
+
+| where event_type_count=2

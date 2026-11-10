@@ -1,0 +1,23 @@
+﻿title: Suspicious Account Added to Local Administrators Group
+id: 8d2f6a41-3c75-4e90-b126-5a7d9c3e8041
+status: experimental
+description: Detects accounts being added to the local Administrators group through Windows Security auditing.
+author: Cyberion Detection Engineering
+date: 2026-11-04
+references:
+    - https://attack.mitre.org/techniques/T1098/007/
+tags:
+    - attack.t1098
+    - attack.t1098.007
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4732
+        TargetUserName: Administrators
+    condition: selection
+falsepositives:
+    - Authorized administrator account provisioning
+    - Legitimate IT or system administration activity
+level: high

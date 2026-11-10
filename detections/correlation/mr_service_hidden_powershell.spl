@@ -1,0 +1,8 @@
+| multisearch
+[ search EventID=13 Image="*\\services.exe" TargetObject="*\\services\\*" Details="*powershell.exe*" Details="*hidden*" Details="*-nop*" | eval event_type="service_hidden_powershell_registry" | rename ProcessGuid as service_process_guid ]
+[ search EventID=1 Image="*\\cmd.exe" ParentImage="*\\services.exe" CommandLine="*powershell.exe*" CommandLine="*-nop*" CommandLine="*hidden*" | eval event_type="service_launched_hidden_powershell" | rename ParentProcessGuid as service_process_guid ]
+
+| bin _time span=30s
+| stats dc(event_type) as event_type_count by _time service_process_guid
+
+| search event_type_count >= 2

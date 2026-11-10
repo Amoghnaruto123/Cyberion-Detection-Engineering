@@ -1,0 +1,24 @@
+﻿title: Suspicious PowerShell Access to LSASS
+id: 3e7b1d91-8c42-4a65-9d21-7f3a2b6c8e10
+status: experimental
+description: Detects PowerShell accessing the LSASS process with a specific access mask observed in credential dumping telemetry.
+author: Cyberion Detection Engineering
+date: 2026-11-02
+references:
+    - https://attack.mitre.org/techniques/T1003/
+tags:
+    - attack.credential-access
+    - attack.t1003
+logsource:
+    product: windows
+    category: process_access
+detection:
+    selection:
+        EventID: 10
+        SourceImage|endswith: '\powershell.exe'
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess: '0x1010'
+    condition: selection
+falsepositives:
+    - Legitimate administrative or security tools accessing LSASS
+level: high

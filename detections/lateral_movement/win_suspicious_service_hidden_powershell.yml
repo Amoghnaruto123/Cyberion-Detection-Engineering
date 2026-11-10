@@ -1,0 +1,29 @@
+﻿title: Suspicious Service Configuration Launching Hidden PowerShell
+id: 6e2a9c41-7d83-4b50-a126-8f5c3d9e7042
+status: experimental
+description: Detects Windows service ImagePath modifications that configure hidden PowerShell execution with suspicious command-line options.
+author: Cyberion Detection Engineering
+date: 2026-11-04
+references:
+    - https://attack.mitre.org/techniques/T1569/002/
+tags:
+    - attack.t1569
+    - attack.t1569.002
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventID: 13
+        Image|endswith: '\services.exe'
+        TargetObject|contains: '\services\'
+        TargetObject|endswith: '\ImagePath'
+        Details|contains|all:
+            - 'powershell'
+            - 'hidden'
+            - '-nop'
+    condition: selection
+falsepositives:
+    - Legitimate software installers configuring PowerShell-based services
+    - Authorized system administration scripts
+level: high
